@@ -1,28 +1,19 @@
 package ifsc.edu.br.router;
 
 public class Main {
-
     public static void main(String[] args) {
-        var routerA = new Router("A");
-        var routerB = new Router("B");
-        var routerC = new Router("C");
-        var routerD = new Router("D");
+        Router routerA = new Router("A");
+        Router routerB = new Router("B");
+        Router routerC = new Router("C");
 
-        routerA.addNeighbor(routerB, 9);
-        routerA.addNeighbor(routerC, 7);
+        routerA.addNeighbor(routerB, 10);
+        routerB.addNeighbor(routerC, 5);
 
-        routerC.addNeighbor(routerD, 2);
+        routerA.sendMessage("Hello from A to C", "C");
+        routerB.sendMessage("Hello from B to C", "C");
 
-        routerB.addNeighbor(routerD, -3);
-
-        PrintUtils.printNeighbors(routerA);
-        PrintUtils.printNeighbors(routerB);
-        PrintUtils.printNeighbors(routerC);
-        PrintUtils.printNeighbors(routerD);
-
-        PrintUtils.printDistanceVector(routerA);
-        PrintUtils.printDistanceVector(routerB);
-        PrintUtils.printDistanceVector(routerC);
-        PrintUtils.printDistanceVector(routerD);
+        routerA.printGraph();
+        routerB.printGraph();
+        routerC.printGraph();
     }
 }
