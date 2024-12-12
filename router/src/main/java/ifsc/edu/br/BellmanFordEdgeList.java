@@ -67,12 +67,13 @@ public class BellmanFordEdgeList {
 
     public static void main(String[] args) {
 
-        int E = 4, V = 4, start = 0;
+        int E = 5, V =5, start = 0;
         Edge[] edges = new Edge[E];
         edges[0] = new Edge(0, 1, 9);
         edges[1] = new Edge(0, 2, 7);
         edges[2] = new Edge(2, 3, 2);
         edges[3] = new Edge(3, 1, -3);
+        edges[4] = new Edge(3, 4, -2);
 
         double[] d = bellmanFord(edges, V, start);
 

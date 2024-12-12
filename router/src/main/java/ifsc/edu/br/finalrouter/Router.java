@@ -13,47 +13,51 @@ public class Router {
     private final String name;
 
     private List<Node> distanceVector;
-    private List<Router> fromNeighbors;
+    private List<Router> neighborsToNotify;
 
     public Router(String name) {
         this.name = name;
-        this.fromNeighbors = new ArrayList<>();
-        this.distanceVector = new ArrayList<>();
+        this.neighborsToNotify = new ArrayList<>();
+        this.distanceVector = new ArrayList<>(List.of(new Node(this, this, BigInteger.ZERO)));
     }
 
-    public void addNeighbor(Router neighbor, int distance) {
-        addNeighbor(neighbor, BigInteger.valueOf(distance));
+
+    private void addNeighbor(Router neighbor, int distance) {
+        System.out.println("\u001B[32mAdding neighbor " + neighbor.getName() + " to " + this.getName() + " with distance " + distance + "\u001B[0m");
+        this.addNeighbor(neighbor, BigInteger.valueOf(distance));
     }
 
-    public void addNeighbor(Router neighbor, BigInteger distance) {
-        neighbor.addFromNeighbor(this);
+    private void addNeighbor(Router neighbor, BigInteger distance) {
+        this.internalAddNeighbor(neighbor, distance);
+        neighbor.internalAddNeighbor(this, distance);
+        this.notifyNeighbors();
+        neighbor.notifyNeighbors();
+    }
+
+    private void internalAddNeighbor(Router neighbor, BigInteger distance) {
+        neighborsToNotify.add(neighbor);
         distanceVector.add(new Node(this, neighbor, distance));
-        notifyNeighbors();
-    }
-
-    private void addFromNeighbor(Router neighbor) {
-        fromNeighbors.add(neighbor);
     }
 
     private boolean calculateNewRoute(Node node, Router origin) {
-        var originNode = this.distanceVector.stream()
+        var actualOriginNode = this.distanceVector.stream()
                 .filter(n -> n.getTo().equals(origin))
                 .findFirst().orElseThrow();
-        var possibleRouteCost = originNode.getDistance().add(node.getDistance());
+        var possibleDistance = actualOriginNode.getDistance().add(node.getDistance());
 
-        var myNode = this.distanceVector.stream()
+        var actualNode = this.distanceVector.stream()
                 .filter(n -> n.getTo().equals(node.getTo()))
                 .findFirst();
 
-        if (myNode.isPresent()) {
-            var actualToNode = myNode.get();
-            if (possibleRouteCost.compareTo(actualToNode.getDistance()) < 0) {
-                actualToNode.setDistance(possibleRouteCost);
+        if (actualNode.isPresent()) {
+            var actualToNode = actualNode.get();
+            if (possibleDistance.compareTo(actualToNode.getDistance()) < 0) {
+                actualToNode.setDistance(possibleDistance);
                 actualToNode.setUsing(origin);
                 return true;
             }
         } else {
-            this.distanceVector.add(new Node(origin, node.getTo(), possibleRouteCost));
+            this.distanceVector.add(new Node(origin, node.getTo(), possibleDistance));
             return true;
         }
         return false;
@@ -67,7 +71,7 @@ public class Router {
     }
 
     public void notifyNeighbors() {
-        fromNeighbors.forEach(neighbor -> neighbor.update(this, distanceVector));
+        neighborsToNotify.forEach(neighbor -> neighbor.update(this, distanceVector));
     }
 
     public void printDistanceVectorGraphically() {
@@ -75,9 +79,7 @@ public class Router {
         System.out.println("Distance Vector for Router " + name + ":");
         distanceVector.stream()
                 .sorted(Comparator.comparing(node -> node.getTo().getName()))
-                .forEach(node -> {
-                    System.out.println("To: " + node.getTo().getName() + " using: " + node.getUsing().getName() + " Cost: " + node.getDistance());
-                });
+                .forEach(node -> System.out.println("To: " + node.getTo().getName() + " using: " + node.getUsing().getName() + " Cost: " + node.getDistance()));
         System.out.println("====================================================");
     }
 
