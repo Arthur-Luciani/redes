@@ -11,11 +11,11 @@ O projeto está organizado nas seguintes pastas e arquivos principais:
   - `BellmanFord.java`: Implementação do algoritmo de Bellman-Ford.
   - `PathVector.java`: Implementação do algoritmo de vetor de caminhos.
   - `Dijkstra.java`: Implementação do algoritmo de Dijkstra.
-  - [ALGORITIMOS.md](src/main/java/ifsc/edu/br/algorithm/ALGORITIMOS.md): Documentação dos algoritmos de roteamento.
+  - [ALGORITIMOS.md](/ifsc/edu/br/algorithm/ALGORITIMOS.md): Documentação dos algoritmos de roteamento.
 
 - `src/main/java/ifsc/edu/br/router/`: Contém a classe principal do roteador.
   - `Router.java`: Classe que representa um roteador na rede.
-  - [ROTEADOR.md](src/main/java/ifsc/edu/br/router/ROTEADOR.md): Documentação da classe Router.
+  - [ROTEADOR.md](/ifsc/edu/br/router/ROTEADOR.md): Documentação da classe Router.
 
 - `src/main/java/ifsc/edu/br/utils/`: Contém utilitários para visualização.
   - `GraphDrawer.java`: Classe para visualização gráfica da rede de roteadores.
