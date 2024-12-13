@@ -1,0 +1,58 @@
+@startuml
+
+interface Algorithm<V> {
+    +recalculate(graph: Graph<V, DefaultEdge>, startVertex: V): void
+    +getNextHop(destination: V): V
+}
+
+class BellmanFord<V> implements Algorithm<V> {
+    +recalculate(graph: Graph<V, DefaultEdge>, startVertex: V): void
+    +getNextHop(destination: V): V
+}
+
+class PathVector<V> implements Algorithm<V> {
+    +recalculate(graph: Graph<V, DefaultEdge>, startVertex: V): void
+    +getNextHop(destination: V): V
+}
+
+class Dijkstra<V> implements Algorithm<V> {
+    +recalculate(graph: Graph<V, DefaultEdge>, startVertex: V): void
+    +getNextHop(destination: V): V
+}
+
+class Router {
+    -id: String
+    -graph: Graph<String, DefaultEdge>
+    -neighbors: Map<String, Router>
+    -algorithm: Algorithm<String>
+    -visualizer: GraphVisualizer<String>
+    +Router(id: String, algorithm: Algorithm<String>)
+    +addNeighbor(neighbor: Router, weight: int): void
+    +sendMessage(message: String, destinationId: String): void
+    +receiveMessage(message: String, receivedGraph: Graph<String, DefaultEdge>): void
+    +printGraph(): void
+    -notifyNeighbors(newNeighbor: Router): void
+    -notifyNeighbors(): void
+    -mergeGraphs(receivedGraph: Graph<String, DefaultEdge>): void
+    +static setVisualizer(visualizer: GraphVisualizer<String>): void
+}
+
+class Main {
+    +main(args: String[]): void
+}
+
+class GraphVisualizer<V> {
+    -mxGraph: mxGraph
+    -parent: Object
+    -vertexMap: Map<V, Object>
+    +GraphVisualizer(graph: Graph<V, DefaultEdge>)
+    +updateMessage(source: V, target: V, message: String): void
+    +static visualize(graph: Graph<V, DefaultEdge>): void
+}
+
+
+Router --> Algorithm
+Router --> GraphVisualizer
+Main --> Router
+
+@enduml
